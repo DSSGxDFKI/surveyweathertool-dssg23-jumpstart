@@ -7,3 +7,4 @@ streamlit_folium
 plotly_express
 geopandas
 contextily
+xarray
