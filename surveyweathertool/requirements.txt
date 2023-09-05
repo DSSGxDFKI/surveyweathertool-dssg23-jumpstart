@@ -28,7 +28,7 @@ pysal
 xarray
 wget
 netcdf4
-# ipywidgets
+ipywidgets
 rioxarray
 # sphinx-rtd-theme
 # sphinx-autoapi
