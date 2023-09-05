@@ -40,7 +40,6 @@ def export_fn(df: pd.DataFrame, output_filepath: str, file_extension: str, *kwar
     return
 
 
-@st.cache_data(show_spinner=False)
 def dataframe_reader(
     file_path: Path, use_columns: Optional[List[str]] = None, reset_index=False, *kwargs
 ) -> pd.DataFrame:

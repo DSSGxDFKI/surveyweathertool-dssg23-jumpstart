@@ -5,6 +5,8 @@ import io
 import pandas as pd
 import streamlit as st
 from PIL import Image
+from pathlib import Path
+from typing import List, Optional
 
 from src.weather.weather_pipeline import convert_point_crs
 
@@ -178,3 +180,50 @@ def load_data_from_google_drive(file_to_load: str):
         fh.seek(0)  # Reset the file pointer to the beginning
         if fh.readable():
             return fh
+
+
+@st.cache_data(show_spinner=False)
+def dataframe_reader(
+    file_path: Path, use_columns: Optional[List[str]] = None, reset_index=False, *kwargs
+) -> pd.DataFrame:
+    """
+    Read data from various file formats and return a DataFrame.
+
+    Parameters:
+        file_path (Path): The path to the input file.
+        use_columns (Optional[List[str]]): A list of column names to include in the DataFrame.
+                                           If None, all columns will be included.
+                                           Default is None.
+        reset_index (bool): Flag if want to reset index from original file.
+        *kwargs (Optional[List]): Any keyword arguments to be passed to pandas reader function
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the data from the input file.
+
+    Raises:
+        ValueError: If the file type is not supported.
+
+    Note:
+        Supported file formats: '.csv', '.sav', '.dta', '.pickle'.
+    """
+    if isinstance(file_path, str):
+        file_path = Path(file_path)
+
+    if file_path.suffix == ".csv":
+        data = pd.read_csv(file_path, usecols=use_columns, *kwargs)
+    elif file_path.suffix == ".sav":
+        data = pd.read_spss(file_path, usecols=use_columns, *kwargs)
+    elif file_path.suffix == ".dta":
+        data = pd.read_stata(file_path, columns=use_columns, *kwargs)
+    elif file_path.suffix == ".parquet":
+        data = pd.read_parquet(file_path, columns=use_columns, *kwargs)
+    elif (file_path.suffix == ".pickle") or (file_path.suffix == ".pkl"):
+        data = pd.read_pickle(file_path, *kwargs)
+        if use_columns is not None:
+            data = data[use_columns]
+    else:
+        raise ValueError("File type not supported.")
+
+    if reset_index:
+        data = data.reset_index()
+    return data

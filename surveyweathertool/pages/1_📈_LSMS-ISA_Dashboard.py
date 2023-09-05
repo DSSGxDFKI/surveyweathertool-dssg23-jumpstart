@@ -3,13 +3,17 @@
 import streamlit as st
 import pandas as pd
 from streamlit_folium import folium_static
-from src.dashboard.utils import filter_survey, filter_weather, load_data_from_google_drive
-from src.survey.helper import dataframe_reader
+from src.dashboard.utils import (
+    filter_survey,
+    filter_weather,
+    load_data_from_google_drive,
+    dataframe_reader,
+)
 from src.weather.weather_pipeline import (
     aggr_monthly,
     combine_map_weather,
     aggr_yearly,
-    aggr_seosonal_nigeria
+    aggr_seosonal_nigeria,
 )
 from src.weather.utils import read_shape_file
 from src.weather.create_visuals import (
@@ -23,7 +27,7 @@ from src.weather.constants import (
     TEMPERATURE_FILE,
     PRECIPITATION_FILE,
     NIGERIA_SHAPE_PATH_FILE,
-    LSMS_SURVEY_FILE
+    LSMS_SURVEY_FILE,
 )
 from src.weather_x_survey.weather_survey import combine_with_poverty_index
 
@@ -118,7 +122,6 @@ with st.sidebar.form(key="columns_in_form"):
         help="Please choose up to 2 weather events to investigate",
     )
 
-
     # Poverty Index widget
     poverty_index_list = [
         None,
@@ -131,7 +134,10 @@ with st.sidebar.form(key="columns_in_form"):
         "Water Poverty",
     ]
     poverty_index_dropdown = st.selectbox(
-        "Poverty Indicators", poverty_index_list, help="Overall Poverty Index Selection", disabled = disable_dropdown
+        "Poverty Indicators",
+        poverty_index_list,
+        help="Overall Poverty Index Selection",
+        disabled=disable_dropdown,
     )
 
     # Admin choice for granularity
@@ -149,7 +155,7 @@ with st.sidebar.form(key="columns_in_form"):
 
 if submitted:
     st.toast("Weather data is being read and preprocessed", icon="⌛")
-    with st.spinner('Weather data is being read and preprocessed...'):
+    with st.spinner("Weather data is being read and preprocessed..."):
         # Read Data for Dashboard (Once and st.caches it)
         nigeria_shape_df = read_shape_file(data_path=NIGERIA_SHAPE_PATH_FILE)
         precipitation_indicators_data = load_data_from_google_drive(
@@ -161,16 +167,13 @@ if submitted:
         )
         temperature_indicators = pd.read_parquet(temperature_indicators_data)
     st.toast("Survey data is being read and preprocessed", icon="⌛")
-    with st.spinner('Survey data is being read and preprocessed...'):
-        lsms_survey_data = load_data_from_google_drive(
-            file_to_load=LSMS_SURVEY_FILE
-        )
+    with st.spinner("Survey data is being read and preprocessed..."):
+        lsms_survey_data = load_data_from_google_drive(file_to_load=LSMS_SURVEY_FILE)
         survey_data_df = pd.read_pickle(lsms_survey_data).reset_index()
         target_epsg = 4326
 
     if disable_dropdown == True:
         poverty_index_dropdown = None
-
 
     dict_value_cols = {
         "Precipitation (mm)": (precipitation_indicators, "Blues"),
@@ -203,12 +206,10 @@ if submitted:
         "Temperature (°C)": "temperature (°C)",
         "Drought": "SPI",
         "Heavy Rain": "deviation from average",
-        "Heat Wave": "deviation from average"
+        "Heat Wave": "deviation from average",
     }
 
-
     weather_columns = []
-
 
     combined_dfs = {}
     for weather in weather_dropdown:
@@ -225,7 +226,7 @@ if submitted:
                 "max": "mean",
             }
         st.toast("Combining weather data to maps", icon="⌛")
-        with st.spinner('Combining weather data to maps...'):
+        with st.spinner("Combining weather data to maps..."):
             combined_df = combine_map_weather(
                 nigeria_shape_df=nigeria_shape_df,
                 weather_df=dict_value_cols[weather][0],
@@ -252,11 +253,13 @@ if submitted:
 
     print(len(weather_dropdown), poverty_index_size, size)
 
-
-    if len(weather_dropdown) == 2 and size < 3  and time_choice_dropdown != "Survey-Dependent":
-
+    if (
+        len(weather_dropdown) == 2
+        and size < 3
+        and time_choice_dropdown != "Survey-Dependent"
+    ):
         st.toast("Generating visualizations", icon="⌛")
-        with st.spinner('Generating visualizations...'):
+        with st.spinner("Generating visualizations..."):
             # filter df
             filtered_df_1 = filter_weather(
                 weather_df=combined_dfs[weather_columns[0]].copy(),
@@ -326,7 +329,10 @@ if submitted:
                 season=season_choice,
             )
 
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Bivariate map for {weather_dropdown[0]} and {weather_dropdown[1]} </h4>", unsafe_allow_html=True)
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Bivariate map for {weather_dropdown[0]} and {weather_dropdown[1]} </h4>",
+                unsafe_allow_html=True,
+            )
             bivariate_map = generate_bivariate_map(
                 combined_df_1=filtered_df_1,
                 combined_df_2=filtered_df_2,
@@ -349,7 +355,10 @@ if submitted:
             #     )
             # )
 
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>", unsafe_allow_html=True)
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
+                unsafe_allow_html=True,
+            )
             st.pyplot(
                 plot_heatmap_grid_on_map(
                     df=filtered_grid_1,
@@ -359,7 +368,10 @@ if submitted:
                     cmap=dict_value_cols[weather_dropdown[0]][1],
                 )
             )
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[1]} </h4>", unsafe_allow_html=True)
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[1]} </h4>",
+                unsafe_allow_html=True,
+            )
             st.pyplot(
                 plot_heatmap_grid_on_map(
                     df=filtered_grid_2,
@@ -370,7 +382,10 @@ if submitted:
                 )
             )
 
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Univariate map for {weather_dropdown[0]} </h4>", unsafe_allow_html=True)
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Univariate map for {weather_dropdown[0]} </h4>",
+                unsafe_allow_html=True,
+            )
             folium_static(
                 generate_choropleth(
                     combined_df=filtered_df_1,
@@ -381,7 +396,10 @@ if submitted:
                 )
             )
 
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Univariate map for {weather_dropdown[1]} </h4>", unsafe_allow_html=True)
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Univariate map for {weather_dropdown[1]} </h4>",
+                unsafe_allow_html=True,
+            )
             folium_static(
                 generate_choropleth(
                     combined_df=filtered_df_2,
@@ -392,13 +410,18 @@ if submitted:
                 )
             )
 
-    elif (len(weather_dropdown) == 1) and (poverty_index_size == 1) and (time_choice_dropdown == "Survey-Dependent"):
-
+    elif (
+        (len(weather_dropdown) == 1)
+        and (poverty_index_size == 1)
+        and (time_choice_dropdown == "Survey-Dependent")
+    ):
         st.toast("Generating visualizations", icon="⌛")
-        with st.spinner('Generating visualizations...'):
+        with st.spinner("Generating visualizations..."):
             # filter df
             filtered_df_1 = filter_survey(
-                survey_df=survey_data_df.copy(), target_epsg=target_epsg, wave=wave_choice
+                survey_df=survey_data_df.copy(),
+                target_epsg=target_epsg,
+                wave=wave_choice,
             )
             filtered_df_2 = filter_weather(
                 weather_df=combined_dfs[weather_columns[0]].copy(),
@@ -417,7 +440,7 @@ if submitted:
                 month=month_choice_dropdown,
                 season=season_choice,
             )
-            
+
             aggregated_prec_grid_1_year = aggr_yearly(
                 df=filtered_grid_1.copy(),
                 column_aggr="mean",
@@ -428,9 +451,13 @@ if submitted:
                 household_df=filtered_df_1.copy(),
                 col_dissolve=admin_choice,
                 wave=wave_choice,
-                poverty_index_col_name=poverty_indicators[poverty_index_dropdown],)
-            
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Bivariate map for {weather_dropdown[0]} and {poverty_index_dropdown} </h4>", unsafe_allow_html=True)
+                poverty_index_col_name=poverty_indicators[poverty_index_dropdown],
+            )
+
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Bivariate map for {weather_dropdown[0]} and {poverty_index_dropdown} </h4>",
+                unsafe_allow_html=True,
+            )
             bivariate_map = generate_bivariate_map(
                 combined_df_1=combined_df_1.copy(),
                 combined_df_2=filtered_df_2.copy(),
@@ -453,7 +480,10 @@ if submitted:
             #     )
             # )
 
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>", unsafe_allow_html=True)
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
+                unsafe_allow_html=True,
+            )
             st.pyplot(
                 plot_heatmap_grid_on_map(
                     df=aggregated_prec_grid_1_year.copy(),
@@ -463,8 +493,11 @@ if submitted:
                     cmap=dict_value_cols[weather_dropdown[0]][1],
                 )
             )
-            
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Univariate map for {poverty_index_dropdown} </h4>", unsafe_allow_html=True)
+
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Univariate map for {poverty_index_dropdown} </h4>",
+                unsafe_allow_html=True,
+            )
             folium_static(
                 generate_choropleth(
                     combined_df=combined_df_1,
@@ -474,8 +507,11 @@ if submitted:
                     fill_color="Reds",
                 )
             )
-            
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Univariate map for {weather_dropdown[0]} </h4>", unsafe_allow_html=True)
+
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Univariate map for {weather_dropdown[0]} </h4>",
+                unsafe_allow_html=True,
+            )
             folium_static(
                 generate_choropleth(
                     combined_df=filtered_df_2,
@@ -486,7 +522,10 @@ if submitted:
                 )
             )
 
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Households on map for {poverty_index_dropdown} </h4>", unsafe_allow_html=True)
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Households on map for {poverty_index_dropdown} </h4>",
+                unsafe_allow_html=True,
+            )
             st.pyplot(
                 plot_poverty_index(
                     wave_panel_df=filtered_df_1,
@@ -495,14 +534,20 @@ if submitted:
                 )
             )
 
-    elif (len(weather_dropdown) == 1) and (poverty_index_size == 0)  and (time_choice_dropdown == "Survey-Dependent"):
-        st.error("Error: Please make sure to select the Survey-Dependent option in the time aggregation dropdown \
-                    only when selecting the poverty indicators", icon="🚨")
+    elif (
+        (len(weather_dropdown) == 1)
+        and (poverty_index_size == 0)
+        and (time_choice_dropdown == "Survey-Dependent")
+    ):
+        st.error(
+            "Error: Please make sure to select the Survey-Dependent option in the time aggregation dropdown \
+                    only when selecting the poverty indicators",
+            icon="🚨",
+        )
 
     elif (len(weather_dropdown) == 1) and (poverty_index_size == 0):
-
         st.toast("Generating visualizations", icon="⌛")
-        with st.spinner('Generating visualizations...'):
+        with st.spinner("Generating visualizations..."):
             filtered_df_1 = filter_weather(
                 weather_df=combined_dfs[weather_columns[0]].copy(),
                 year=year_choice_dropdown,
@@ -544,7 +589,7 @@ if submitted:
             #         df=filtered_df_1.copy(), weather_data_name=weather_columns[0]
             #     )
             # )
-            
+
             # time_series_1 = filter_weather(
             #     weather_df=dict_value_cols[weather_dropdown[0]][0].copy(),
             #     year=year_choice_dropdown,
@@ -555,7 +600,10 @@ if submitted:
             #     )
             # )
 
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>", unsafe_allow_html=True)
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
+                unsafe_allow_html=True,
+            )
             st.pyplot(
                 plot_heatmap_grid_on_map(
                     df=filtered_grid_1,
@@ -566,7 +614,10 @@ if submitted:
                 )
             )
 
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Univariate map for {weather_dropdown[0]} </h4>", unsafe_allow_html=True)
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Univariate map for {weather_dropdown[0]} </h4>",
+                unsafe_allow_html=True,
+            )
             folium_static(
                 generate_choropleth(
                     combined_df=filtered_df_1,
@@ -577,12 +628,17 @@ if submitted:
                 )
             )
 
-    elif (weather_size == 0) and (poverty_index_size == 1) and time_choice_dropdown == "Survey-Dependent":
-
+    elif (
+        (weather_size == 0)
+        and (poverty_index_size == 1)
+        and time_choice_dropdown == "Survey-Dependent"
+    ):
         st.toast("Generating visualizations", icon="⌛")
-        with st.spinner('Generating visualizations...'):
+        with st.spinner("Generating visualizations..."):
             filtered_df_1 = filter_survey(
-                survey_df=survey_data_df.copy(), target_epsg=target_epsg, wave=wave_choice
+                survey_df=survey_data_df.copy(),
+                target_epsg=target_epsg,
+                wave=wave_choice,
             )
 
             print(filtered_df_1[poverty_indicators[poverty_index_dropdown]].unique())
@@ -592,10 +648,13 @@ if submitted:
                 household_df=filtered_df_1.copy(),
                 col_dissolve=admin_choice,
                 wave=wave_choice,
-                poverty_index_col_name=poverty_indicators[poverty_index_dropdown],)
-            
+                poverty_index_col_name=poverty_indicators[poverty_index_dropdown],
+            )
 
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Univariate map for {poverty_index_dropdown} </h4>", unsafe_allow_html=True)
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Univariate map for {poverty_index_dropdown} </h4>",
+                unsafe_allow_html=True,
+            )
             folium_static(
                 generate_choropleth(
                     combined_df=combined_df_1,
@@ -611,7 +670,10 @@ if submitted:
             #     )
             # )
 
-            st.markdown(f"<h4 style='text-align: center; color: black;'>Households on map for {poverty_index_dropdown} </h4>", unsafe_allow_html=True)
+            st.markdown(
+                f"<h4 style='text-align: center; color: black;'>Households on map for {poverty_index_dropdown} </h4>",
+                unsafe_allow_html=True,
+            )
             st.pyplot(
                 plot_poverty_index(
                     wave_panel_df=filtered_df_1,
@@ -624,7 +686,10 @@ if submitted:
         st.error("Error: Too many dropdowns selected, please delete one", icon="🚨")
 
     else:
-        st.error("No filters were selected, please choose one and a time frame in order to use this tool.", icon="🚨")
+        st.error(
+            "No filters were selected, please choose one and a time frame in order to use this tool.",
+            icon="🚨",
+        )
 
 
 # Side Bar Set Up
@@ -658,4 +723,7 @@ with st.sidebar.expander("About the App"):
                 """
     )
 
-st.sidebar.markdown(f"<h5 style='text-align: center; color: black;'>Copyright (c) 2023 Data Science for Social Good (RPTU and DFKI) </h4>", unsafe_allow_html=True)
+st.sidebar.markdown(
+    f"<h5 style='text-align: center; color: black;'>Copyright (c) 2023 Data Science for Social Good (RPTU and DFKI) </h4>",
+    unsafe_allow_html=True,
+)
