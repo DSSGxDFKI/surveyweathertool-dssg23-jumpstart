@@ -10,3 +10,4 @@ contextily
 xarray
 rioxarray
 xmltodict
+scikit-learn
