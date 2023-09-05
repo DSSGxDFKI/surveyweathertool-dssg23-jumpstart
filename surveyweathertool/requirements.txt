@@ -5,3 +5,4 @@ google-api-python-client
 # google-auth-oauthlib
 streamlit_folium
 plotly_express
+geopandas
