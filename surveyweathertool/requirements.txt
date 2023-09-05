@@ -8,3 +8,4 @@ plotly_express
 geopandas
 contextily
 xarray
+rioxarray
