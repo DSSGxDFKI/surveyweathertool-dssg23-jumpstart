@@ -1,0 +1,11 @@
+									
+Field			DESCRIPTION											
+admin2Name		This is the recommended field to be used in reporting Admin level 2 (Local Government Areas)											
+admin2Pcode		This field contains a unique pcode for each admin level 2 (Local Government Areas)											
+admin2RefName		This field contains the same information as the admin2Name_en without apostrophes or special characters in the spelling											
+admin2AltName1		Empty											
+admin2AltName2		Empty											
+admin1Name		This field contains the name of the admin level 1 (State) the admin level 2 (Local Government Area) belongs to											
+admin1Pcode		This field contains a unique pcode for the admin level 1 (State) the admin level 2 (Local Government Area) belongs to											
+admin0Name		This field contains the name of the admin level 0 (Country) the admin level 2 (Local Government Area) belongs to											
+admin0Pcode		This field contains a unique pcode for the admin level 0 (Country) the admin level 2 (Local Government Area) belongs to											
