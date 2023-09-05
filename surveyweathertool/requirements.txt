@@ -9,3 +9,4 @@ geopandas
 contextily
 xarray
 rioxarray
+xmltodict
