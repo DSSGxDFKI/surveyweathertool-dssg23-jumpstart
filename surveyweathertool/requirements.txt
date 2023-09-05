@@ -1,14 +1,44 @@
 # Python 3.10
+pyarrow
+parquet
+scikit-learn
+# numpy
 # pandas
+matplotlib
+# sphinx
+# plotly
+plotly-express
+geojson
+geopandas
+wheel
+twine
+altair
+# streamlit
+xmltodict
+# ydata_profiling
+statsmodels
+# folium
+streamlit_folium
+contextily
+kaleido
+openpyxl
+pyreadstat
+fastdtw
+pysal 
+xarray
+wget
+netcdf4
+# ipywidgets
+rioxarray
+# sphinx-rtd-theme
+# sphinx-autoapi
+# sphinxcontrib-apidoc
+# sphinxcontrib-jsmath
+# sphinxcontrib-applehelp
+# sphinxcontrib-devhelp
+# sphinxcontrib-htmlhelp
+# sphinxcontrib-qthelp
+# sphinxcontrib-serializinghtml
 google-api-python-client
 # google-auth-httplib2
 # google-auth-oauthlib
-streamlit_folium
-plotly_express
-geopandas
-contextily
-xarray
-rioxarray
-xmltodict
-scikit-learn
-fastdtw
