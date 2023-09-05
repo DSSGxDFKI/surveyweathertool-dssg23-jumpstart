@@ -1,7 +1,7 @@
 from pathlib import Path
 
 RAW_DATA_PATH = Path("/app/data/raw")
-PATH_DASHBOARD_INPUT_DATA = "/app/surveyweathertool/data"
+PATH_DASHBOARD_INPUT_DATA = "surveyweathertool/data"
 NIGERIA_SHAPE_PATH_FILE = (
     f"{PATH_DASHBOARD_INPUT_DATA}/nga_admin/nga_admbnda_adm2_osgof_20170222.shp"
 )
@@ -31,7 +31,9 @@ SPI_PATH_FILE = (
 PRECIPITATION_INDICATORS = (
     f"{PATH_DASHBOARD_INPUT_DATA}/all_precipitation_indicators.parquet"
 )
-TEMPERATURE_INDICATORS = f"{PATH_DASHBOARD_INPUT_DATA}/all_temperature_interpolated_indicators.parquet"
+TEMPERATURE_INDICATORS = (
+    f"{PATH_DASHBOARD_INPUT_DATA}/all_temperature_interpolated_indicators.parquet"
+)
 
 # Dasbhoard input data on Google Drive
 LSMS_SURVEY_FILE = "16K6TFFe9nZD_tos5YDBrEVWHAA4zNx4P"
