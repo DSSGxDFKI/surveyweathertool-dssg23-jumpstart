@@ -86,24 +86,6 @@ def dataframe_reader(
     return data
 
 
-def check_create_folder(folder_path: str) -> None:
-    """
-    Checks if a folder exists at the given path and creates it if it doesn't exist.
-
-    Args:
-        folder_path (str): The path of the folder to check and create.
-
-    Returns:
-        None
-    """
-    path = Path(folder_path)
-    if not path.exists():
-        path.mkdir(parents=True)
-        print("Directory structure created.")
-    else:
-        print("Directory structure already exists.")
-
-
 def sortable_key_value_dictionary(
     dictionary: dict, by_keys: bool = True, reverse: bool = False
 ) -> dict:

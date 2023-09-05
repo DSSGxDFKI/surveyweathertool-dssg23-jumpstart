@@ -8,7 +8,7 @@ from openpyxl import load_workbook
 from src.survey.helper import *
 from src.survey.constants import *
 
-        
+
 def prepare_files_descriptions_data(json_file_path: str) -> dict:
     """
     Prepares data descriptions for files from a JSON file.
@@ -24,7 +24,7 @@ def prepare_files_descriptions_data(json_file_path: str) -> dict:
     cols_data_descr = main_json_data["dataDscr"]["var"]
     interested_cols = ["@ID", "@files", "@name", "labl", "varFormat"]
     cols_filtered_dicts = filter_dicts_by_keys(cols_data_descr, interested_cols)
-    
+
     data_files_descriptions = {}
     if cols_filtered_dicts:
         for filtered_value in cols_filtered_dicts:
@@ -113,7 +113,7 @@ def write_dict_to_file(data, output_path, filename, file_type="xlsx"):
             builder = {}
 
         output_dir = Path(output_path)
-        output_dir.mkdir(parents=True, exist_ok=True)
+        # output_dir.mkdir(parents=True, exist_ok=True)
 
         file_path = output_dir / (filename + "." + file_type)
         if file_type == "csv":
@@ -375,18 +375,21 @@ def prepare_concatenated_data(
 
         if mod_filename_match and filename in files_paths:
             file_path = files_paths[filename]
-            
+
             indicators = sorted(list(indicators))
             use_columns = PRIMARY_COLUMNS + indicators
 
             data = dataframe_reader(file_path, use_columns=use_columns)
-            
+
             preprocessing_transformer(data, PRIMARY_COLUMNS, indicators)
             container[mod_filename_match].append(data)
-            
+
     if container:
         # TODO: make a general reader
-        geodata_across_waves = dataframe_reader(file_path=geodata_path, use_columns=['wave', 'hhid', 'longitude', 'latitude'])
+        geodata_across_waves = dataframe_reader(
+            file_path=geodata_path,
+            use_columns=["wave", "hhid", "longitude", "latitude"],
+        )
         concantenated_data = []
 
         for data_values in container.values():
@@ -429,9 +432,9 @@ def indicator_merger(concatenated_data: List[pd.DataFrame]) -> pd.DataFrame:
 def harmonize():
     """
     Runs all setup on the harmonize dataset and save for all selected indicators_
-    """    
+    """
     xml_to_json_converter(XML_FILE_PATH, JSON_FILE_PATH)
-    
+
     data_files_descriptions = prepare_files_descriptions_data(JSON_FILE_PATH)
     write_dict_to_file(
         data_files_descriptions, f"{DATA_FOLDER_PATH}", "data_dictionary"
@@ -442,15 +445,15 @@ def harmonize():
     _, _, _, filenames_indicator = add_extract_dict_to_excel(
         DATA_DICTIONARY_PATH, data_files_descriptions, PRIMARY_COLUMNS
     )
-    
+
     harmonized_data = get_all_harmonized_files_dictionary(
         HARMONIZED_DATA_PATH, FILE_EXTENSION_CHOICES
     )
-    
+
     preprocessed_concatenated_data = prepare_concatenated_data(
         filenames_indicator, harmonized_data, GEOLOCATION_DATA_PATH
     )
-    
+
     merged_indicator_data = indicator_merger(preprocessed_concatenated_data)
     saving_data_formatter(merged_indicator_data, "all_domains_combined")
     print(merged_indicator_data.head())
