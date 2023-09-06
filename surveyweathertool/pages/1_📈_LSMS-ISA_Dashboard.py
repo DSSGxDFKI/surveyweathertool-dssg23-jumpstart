@@ -174,6 +174,7 @@ if submitted:
         check_memory_and_disk_usage()
         temperature_indicators = pd.read_parquet(temperature_indicators_data)
         check_memory_and_disk_usage()
+        test = pd.read_pickle("/app/all_weather_indicators.pkl")
     st.toast("Survey data is being read and preprocessed", icon="⌛")
     with st.spinner("Survey data is being read and preprocessed..."):
         lsms_survey_data = load_data_from_google_drive(file_to_load=LSMS_SURVEY_FILE)
