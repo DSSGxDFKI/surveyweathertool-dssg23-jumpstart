@@ -28,6 +28,7 @@ from src.weather.constants import (
     PRECIPITATION_FILE,
     NIGERIA_SHAPE_PATH_FILE,
     LSMS_SURVEY_FILE,
+    JOINED_WEATHER_DATA_FILE
 )
 from src.weather_x_survey.weather_survey import combine_with_poverty_index
 
@@ -167,7 +168,7 @@ if submitted:
         # )
         # temperature_indicators = pd.read_parquet(temperature_indicators_data)
         weather_data = load_data_from_google_drive(
-            file_to_load="1WLaf5ywBGJLhpr8VvLr67VRK3tL_KQSN"
+            file_to_load=JOINED_WEATHER_DATA_FILE
         )
         weather_data_df = pd.read_parquet(weather_data)
         weather_data_df = preprocess_weather_data(weather_data_df)

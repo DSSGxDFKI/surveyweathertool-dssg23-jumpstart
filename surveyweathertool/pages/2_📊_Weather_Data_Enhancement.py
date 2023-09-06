@@ -17,7 +17,7 @@ from src.dashboard.utils import (
 )
 from src.weather_x_survey.weather_survey import merge_weather_household
 
-from src.weather.constants import PRECIPITATION_FILE, TEMPERATURE_FILE
+from src.weather.constants import PRECIPITATION_FILE, TEMPERATURE_FILE, JOINED_WEATHER_DATA_FILE
 
 # Page Configuration
 st.set_page_config(page_title="Weather Data Enhancement", page_icon="📊")
@@ -92,7 +92,7 @@ if uploaded_file is not None:
             "temperature": ["temperature", "heatwave_index"],
         }
         weather_data = load_data_from_google_drive(
-            file_to_load="1WLaf5ywBGJLhpr8VvLr67VRK3tL_KQSN"
+            file_to_load=JOINED_WEATHER_DATA_FILE
         )
         weather_data_df = pd.read_parquet(weather_data)
         weather_data_df = preprocess_weather_data(weather_data_df)
