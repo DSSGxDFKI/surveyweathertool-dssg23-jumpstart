@@ -166,11 +166,11 @@ if submitted:
         #     file_to_load=TEMPERATURE_FILE
         # )
         # temperature_indicators = pd.read_parquet(temperature_indicators_data)
-        test_data = load_data_from_google_drive(
+        weather_data = load_data_from_google_drive(
             file_to_load="1WLaf5ywBGJLhpr8VvLr67VRK3tL_KQSN"
         )
-        test = pd.read_parquet(test_data)
-        test = preprocess_weather_data(test)
+        weather_data_df = pd.read_parquet(weather_data)
+        weather_data_df = preprocess_weather_data(weather_data_df)
     st.toast("Survey data is being read and preprocessed", icon="⌛")
     with st.spinner("Survey data is being read and preprocessed..."):
         lsms_survey_data = load_data_from_google_drive(file_to_load=LSMS_SURVEY_FILE)
@@ -181,11 +181,11 @@ if submitted:
         poverty_index_dropdown = None
 
     dict_value_cols = {
-        "Precipitation (mm)": (test, "Blues"),
-        "Temperature (°C)": (test, "Reds"),
-        "Drought": (test, "Blues"),
-        "Heavy Rain": (test, "Blues"),
-        "Heat Wave": (test, "Blues"),
+        "Precipitation (mm)": (weather_data_df, "Blues"),
+        "Temperature (°C)": (weather_data_df, "Reds"),
+        "Drought": (weather_data_df, "Blues"),
+        "Heavy Rain": (weather_data_df, "Blues"),
+        "Heat Wave": (weather_data_df, "Blues"),
     }
 
     weather_indicators = {

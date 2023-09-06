@@ -91,11 +91,11 @@ if uploaded_file is not None:
             "precipitation": ["precipitation", "heavy_rain_index", "spi_index"],
             "temperature": ["temperature", "heatwave_index"],
         }
-        test_data = load_data_from_google_drive(
+        weather_data = load_data_from_google_drive(
             file_to_load="1WLaf5ywBGJLhpr8VvLr67VRK3tL_KQSN"
         )
-        test = pd.read_parquet(test_data)
-        test = preprocess_weather_data(test)
+        weather_data_df = pd.read_parquet(weather_data)
+        weather_data_df = preprocess_weather_data(weather_data_df)
         merged_data = input.copy()
 
     st.toast("Weather features are being created", icon="⌛")
@@ -103,9 +103,9 @@ if uploaded_file is not None:
     with st.spinner("Weather features are being created..."):
         for key, value_cols in weather_data_indicators_dict.items():
             if key == "precipitation":
-                weather_df = test
+                weather_df = weather_data_df
             elif key == "temperature":
-                weather_df = test
+                weather_df = weather_data_df
             for indicator in value_cols:
                 # Retrieve weather information for the input using interpolated weather data
                 merged_weather_data = merge_weather_household(
