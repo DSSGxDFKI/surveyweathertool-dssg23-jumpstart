@@ -102,7 +102,10 @@ if uploaded_file is not None:
             "precipitation": ["precipitation", "rainfall_severity", "spi_score"],
             "temperature": ["temperature", "heatwave_severity"],
         }
-        test = pd.read_pickle("/app/all_weather_indicators.pkl")
+        test_data = load_data_from_google_drive(
+            file_to_load="1dlR8zgEPsjA2rKRgKnjHfxW4p3L3GH07"
+        )
+        test = pd.read_pickle(test_data)
         test = preprocess_weather_data(test)
         merged_data = input.copy()
 
