@@ -87,6 +87,7 @@ def run_dashboard():
         unsafe_allow_html=True,
     )
 
+logging.basicConfig(level=logging.INFO)
 logging.info(f"The number of CPUs of the web app: {psutil.cpu_count()}")
 print(f"The number of CPUs of the web app: {psutil.cpu_count()}")
 check_memory_and_disk_usage()
