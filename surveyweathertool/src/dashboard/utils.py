@@ -13,7 +13,6 @@ import logging
 from src.weather.weather_pipeline import convert_point_crs
 
 
-@st.cache_data
 def read_logos(logos_path):
     """
     Reads and returns the STC, UNICEF, DSA, and NOAA logos from the provided path.
