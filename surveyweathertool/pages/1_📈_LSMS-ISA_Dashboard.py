@@ -175,7 +175,7 @@ if submitted:
         # temperature_indicators = pd.read_parquet(temperature_indicators_data)
         # check_memory_and_disk_usage()
         test_data = load_data_from_google_drive(
-            file_to_load="1cVsoBnMlzWUcTtnYOnuSkkFpM72fBGsE"
+            file_to_load="1WLaf5ywBGJLhpr8VvLr67VRK3tL_KQSN"
         )
         test = pd.read_parquet(test_data)
         test = preprocess_weather_data(test)
@@ -201,9 +201,9 @@ if submitted:
     weather_indicators = {
         "Precipitation (mm)": "precipitation",
         "Temperature (°C)": "temperature",
-        "Drought": "spi_score",
-        "Heavy Rain": "rainfall_severity",
-        "Heat Wave": "heatwave_severity",
+        "Drought": "spi_index",
+        "Heavy Rain": "heavy_rain_index",
+        "Heat Wave": "heatwave_index",
     }
 
     poverty_indicators = {

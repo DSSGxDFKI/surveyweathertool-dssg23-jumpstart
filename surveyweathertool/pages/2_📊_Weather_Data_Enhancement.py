@@ -99,11 +99,11 @@ if uploaded_file is not None:
 
         # Defining all indicators to aggregate and return attached to uploaded data
         weather_data_indicators_dict = {
-            "precipitation": ["precipitation", "rainfall_severity", "spi_score"],
-            "temperature": ["temperature", "heatwave_severity"],
+            "precipitation": ["precipitation", "heavy_rain_index", "spi_index"],
+            "temperature": ["temperature", "heatwave_index"],
         }
         test_data = load_data_from_google_drive(
-            file_to_load="1cVsoBnMlzWUcTtnYOnuSkkFpM72fBGsE"
+            file_to_load="1WLaf5ywBGJLhpr8VvLr67VRK3tL_KQSN"
         )
         test = pd.read_parquet(test_data)
         test = preprocess_weather_data(test)
