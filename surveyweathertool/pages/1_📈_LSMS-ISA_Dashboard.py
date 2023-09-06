@@ -7,8 +7,8 @@ from src.dashboard.utils import (
     filter_survey,
     filter_weather,
     load_data_from_google_drive,
-    dataframe_reader,
-    check_memory_and_disk_usage
+    check_memory_and_disk_usage,
+    preprocess_weather_data
 )
 from src.weather.weather_pipeline import (
     aggr_monthly,
@@ -19,7 +19,7 @@ from src.weather.weather_pipeline import (
 from src.weather.utils import read_shape_file
 from src.weather.create_visuals import (
     generate_choropleth,
-    generate_interactive_time_series,
+    # generate_interactive_time_series,
     generate_bivariate_map,
     plot_poverty_index,
 )

@@ -4,7 +4,7 @@ from PIL import Image
 import streamlit as st
 from src.dashboard.utils import read_logos, check_memory_and_disk_usage
 import psutil
-
+import logging
 
 def run_dashboard():
     # # Home Page Configuration
