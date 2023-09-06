@@ -117,7 +117,7 @@ if uploaded_file is not None:
                 # Retrieve weather information for the input using interpolated weather data
                 check_memory_and_disk_usage()
                 merged_weather_data = merge_weather_household(
-                    input, weather_df.copy(), indicator
+                    input, weather_df, indicator
                 )
                 merged_data = pd.merge(
                     merged_data,
