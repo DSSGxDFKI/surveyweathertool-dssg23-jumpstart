@@ -51,7 +51,7 @@ st.markdown(
 # Add filters/input widgets with tooltips
 st.sidebar.markdown("Select Filters:")
 
-year_list = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019]
+year_list = [2010, 2011, 2012, 2013, 2014, 2015, 2016]
 year_choice_dropdown = st.sidebar.selectbox("Year", year_list, help="Year Selection")
 # Time Aggregation Choice Widget
 time_list = ["Yearly", "Seasonaly", "Monthly", "Survey-Dependent"]
