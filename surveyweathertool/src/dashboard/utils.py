@@ -7,6 +7,7 @@ import streamlit as st
 from PIL import Image
 from pathlib import Path
 from typing import List, Optional
+import psutil
 
 from src.weather.weather_pipeline import convert_point_crs
 
@@ -227,3 +228,12 @@ def dataframe_reader(
     if reset_index:
         data = data.reset_index()
     return data
+
+def check_memory_and_disk_usage():
+    gb_size = 1024 * 1024 * 1000
+    used_memory = psutil.virtual_memory().used
+    calculated_used_memory = psutil.virtual_memory().total - psutil.virtual_memory().available
+    print(f"The 'used' memory: {used_memory / gb_size}")
+    print(f"The caculated used memory: {calculated_used_memory / gb_size}")
+    # print(f"The used swap memory: {psutil.swap_memory().percent}")
+    # print(f"The used disk space: {psutil.disk_usage('/').percent}")
