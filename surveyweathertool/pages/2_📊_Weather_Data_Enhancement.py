@@ -82,27 +82,28 @@ if uploaded_file is not None:
     # Read Weather data (Temp and Precip with climate columns) and preprocess it
     st.toast("Weather data is being read and preprocessed", icon="⌛")
     with st.spinner("Weather data is being read and preprocessed..."):
-        check_memory_and_disk_usage()
-        precipitation_indicators_data = load_data_from_google_drive(
-            file_to_load=PRECIPITATION_FILE
-        )
-        precipitation_indicators = pd.read_parquet(precipitation_indicators_data)
-        precipitation_indicators = preprocess_weather_data(precipitation_indicators)
-        check_memory_and_disk_usage()
-        temperature_indicators_data = load_data_from_google_drive(
-            file_to_load=TEMPERATURE_FILE
-        )
-        temperature_indicators = pd.read_parquet(temperature_indicators_data)
-        temperature_indicators = preprocess_weather_data(temperature_indicators)
+        # check_memory_and_disk_usage()
+        # precipitation_indicators_data = load_data_from_google_drive(
+        #     file_to_load=PRECIPITATION_FILE
+        # )
+        # precipitation_indicators = pd.read_parquet(precipitation_indicators_data)
+        # precipitation_indicators = preprocess_weather_data(precipitation_indicators)
+        # check_memory_and_disk_usage()
+        # temperature_indicators_data = load_data_from_google_drive(
+        #     file_to_load=TEMPERATURE_FILE
+        # )
+        # temperature_indicators = pd.read_parquet(temperature_indicators_data)
+        # temperature_indicators = preprocess_weather_data(temperature_indicators)
 
         check_memory_and_disk_usage()
 
         # Defining all indicators to aggregate and return attached to uploaded data
         weather_data_indicators_dict = {
-            "precipitation": ["precipitation", "heavy_rain_index", "spi_index"],
-            "temperature": ["temperature", "heatwave_index"],
+            "precipitation": ["precipitation", "rainfall_severity", "spi_score"],
+            "temperature": ["temperature", "heatwave_severity"],
         }
-
+        test = pd.read_pickle("/app/all_weather_indicators.pkl")
+        test = preprocess_weather_data(test)
         merged_data = input.copy()
 
     st.toast("Weather features are being created", icon="⌛")
@@ -110,9 +111,9 @@ if uploaded_file is not None:
     with st.spinner("Weather features are being created..."):
         for key, value_cols in weather_data_indicators_dict.items():
             if key == "precipitation":
-                weather_df = precipitation_indicators.copy()
+                weather_df = test
             elif key == "temperature":
-                weather_df = temperature_indicators.copy()
+                weather_df = test
             for indicator in value_cols:
                 # Retrieve weather information for the input using interpolated weather data
                 check_memory_and_disk_usage()
@@ -144,20 +145,20 @@ if uploaded_file is not None:
 # Side Bar Set Up
 st.sidebar.markdown(
     """
-         <style>
+        <style>
             [data-testid="stVerticalBlock"] > img:first-child {
-                  margin-top: -60px;
+                margin-top: -60px;
             }
 
             [data-testid=stImage]{
-                  text-align: center;
-                  display: block;
-                  margin-left: auto;
-                  margin-right: auto;
-                  width: 100%;
+                text-align: center;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 100%;
             }
-         </style>
-         """,
+        </style>
+        """,
     unsafe_allow_html=True,
 )
 

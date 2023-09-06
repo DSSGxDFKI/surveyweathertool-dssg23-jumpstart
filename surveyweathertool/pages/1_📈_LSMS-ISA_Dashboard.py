@@ -162,19 +162,20 @@ if submitted:
     with st.spinner("Weather data is being read and preprocessed..."):
         # Read Data for Dashboard (Once and st.caches it)
         nigeria_shape_df = read_shape_file(data_path=NIGERIA_SHAPE_PATH_FILE)
-        check_memory_and_disk_usage()
-        precipitation_indicators_data = load_data_from_google_drive(
-            file_to_load=PRECIPITATION_FILE
-        )
-        check_memory_and_disk_usage()
-        precipitation_indicators = pd.read_parquet(precipitation_indicators_data)
-        temperature_indicators_data = load_data_from_google_drive(
-            file_to_load=TEMPERATURE_FILE
-        )
-        check_memory_and_disk_usage()
-        temperature_indicators = pd.read_parquet(temperature_indicators_data)
-        check_memory_and_disk_usage()
+        # check_memory_and_disk_usage()
+        # precipitation_indicators_data = load_data_from_google_drive(
+        #     file_to_load=PRECIPITATION_FILE
+        # )
+        # check_memory_and_disk_usage()
+        # precipitation_indicators = pd.read_parquet(precipitation_indicators_data)
+        # temperature_indicators_data = load_data_from_google_drive(
+        #     file_to_load=TEMPERATURE_FILE
+        # )
+        # check_memory_and_disk_usage()
+        # temperature_indicators = pd.read_parquet(temperature_indicators_data)
+        # check_memory_and_disk_usage()
         test = pd.read_pickle("/app/all_weather_indicators.pkl")
+        test = preprocess_weather_data(test)
     st.toast("Survey data is being read and preprocessed", icon="⌛")
     with st.spinner("Survey data is being read and preprocessed..."):
         lsms_survey_data = load_data_from_google_drive(file_to_load=LSMS_SURVEY_FILE)
@@ -187,19 +188,19 @@ if submitted:
         poverty_index_dropdown = None
 
     dict_value_cols = {
-        "Precipitation (mm)": (precipitation_indicators, "Blues"),
-        "Temperature (°C)": (temperature_indicators, "Reds"),
-        "Drought": (precipitation_indicators, "Blues"),
-        "Heavy Rain": (precipitation_indicators, "Blues"),
-        "Heat Wave": (temperature_indicators, "Blues"),
+        "Precipitation (mm)": (test, "Blues"),
+        "Temperature (°C)": (test, "Reds"),
+        "Drought": (test, "Blues"),
+        "Heavy Rain": (test, "Blues"),
+        "Heat Wave": (test, "Blues"),
     }
 
     weather_indicators = {
         "Precipitation (mm)": "precipitation",
         "Temperature (°C)": "temperature",
-        "Drought": "spi_index",
-        "Heavy Rain": "heavy_rain_index",
-        "Heat Wave": "heatwave_index",
+        "Drought": "spi_score",
+        "Heavy Rain": "rainfall_severity",
+        "Heat Wave": "heatwave_severity",
     }
 
     poverty_indicators = {
@@ -706,20 +707,20 @@ if submitted:
 # Side Bar Set Up
 st.sidebar.markdown(
     """
-         <style>
+        <style>
             [data-testid="stVerticalBlock"] > img:first-child {
-                  margin-top: -60px;
+                margin-top: -60px;
             }
 
             [data-testid=stImage]{
-                  text-align: center;
-                  display: block;
-                  margin-left: auto;
-                  margin-right: auto;
-                  width: 100%;
+                text-align: center;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 100%;
             }
-         </style>
-         """,
+        </style>
+        """,
     unsafe_allow_html=True,
 )
 
