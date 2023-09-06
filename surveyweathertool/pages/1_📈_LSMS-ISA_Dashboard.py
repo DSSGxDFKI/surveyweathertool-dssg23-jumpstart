@@ -175,9 +175,9 @@ if submitted:
         # temperature_indicators = pd.read_parquet(temperature_indicators_data)
         # check_memory_and_disk_usage()
         test_data = load_data_from_google_drive(
-            file_to_load="1dlR8zgEPsjA2rKRgKnjHfxW4p3L3GH07"
+            file_to_load="1cVsoBnMlzWUcTtnYOnuSkkFpM72fBGsE"
         )
-        test = pd.read_pickle(test_data)
+        test = pd.read_parquet(test_data)
         test = preprocess_weather_data(test)
     st.toast("Survey data is being read and preprocessed", icon="⌛")
     with st.spinner("Survey data is being read and preprocessed..."):

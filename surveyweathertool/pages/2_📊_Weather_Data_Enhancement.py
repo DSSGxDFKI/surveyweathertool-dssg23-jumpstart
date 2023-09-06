@@ -103,9 +103,9 @@ if uploaded_file is not None:
             "temperature": ["temperature", "heatwave_severity"],
         }
         test_data = load_data_from_google_drive(
-            file_to_load="1dlR8zgEPsjA2rKRgKnjHfxW4p3L3GH07"
+            file_to_load="1cVsoBnMlzWUcTtnYOnuSkkFpM72fBGsE"
         )
-        test = pd.read_pickle(test_data)
+        test = pd.read_parquet(test_data)
         test = preprocess_weather_data(test)
         merged_data = input.copy()
 
