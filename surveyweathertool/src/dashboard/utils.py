@@ -8,6 +8,7 @@ from PIL import Image
 from pathlib import Path
 from typing import List, Optional
 import psutil
+import logging
 
 from src.weather.weather_pipeline import convert_point_crs
 
@@ -233,6 +234,9 @@ def check_memory_and_disk_usage():
     gb_size = 1024 * 1024 * 1000
     used_memory = psutil.virtual_memory().used
     calculated_used_memory = psutil.virtual_memory().total - psutil.virtual_memory().available
+    logging.basicConfig(level=logging.INFO)
+    logging.info(f"The 'used' memory: {used_memory / gb_size}")
+    logging.info(f"The caculated used memory: {calculated_used_memory / gb_size}")
     print(f"The 'used' memory: {used_memory / gb_size}")
     print(f"The caculated used memory: {calculated_used_memory / gb_size}")
     # print(f"The used swap memory: {psutil.swap_memory().percent}")
