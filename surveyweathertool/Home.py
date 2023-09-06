@@ -3,6 +3,8 @@ from io import StringIO
 from PIL import Image
 import streamlit as st
 from src.dashboard.utils import read_logos
+import psutil
+
 
 def run_dashboard():
     # # Home Page Configuration
@@ -10,7 +12,6 @@ def run_dashboard():
     #         page_title="Home",
     #         page_icon="👋",
     #     )
-
 
     # Page Aesthetics and Texts
     st.write("# DSSG X UNICEF X STC 👋")
@@ -31,7 +32,7 @@ def run_dashboard():
 
     with st.expander("MIT License"):
         st.write(
-        """
+            """
         MIT License
 
         Copyright (c) 2023 Data Science for Social Good (RPTU and DFKI)
@@ -58,7 +59,7 @@ def run_dashboard():
 
     # Side Bar Set Up
     st.sidebar.markdown(
-            """
+        """
             <style>
                 [data-testid="stVerticalBlock"] > img:first-child {
                     margin-top: -60px;
@@ -73,15 +74,22 @@ def run_dashboard():
                 }
             </style>
             """,
-            unsafe_allow_html=True,
-        )
+        unsafe_allow_html=True,
+    )
     # Add Sidebar images
     STCimage, UNICEFimage, DSAimage, NOAAimage = read_logos("surveyweathertool/logos")
-    st.sidebar.image(UNICEFimage, width = 250)
-    st.sidebar.image(STCimage, width = 250)
-    st.sidebar.image(DSAimage, width = 125)
+    st.sidebar.image(UNICEFimage, width=250)
+    st.sidebar.image(STCimage, width=250)
+    st.sidebar.image(DSAimage, width=125)
 
-    st.sidebar.markdown(f"<h5 style='text-align: center; color: black;'>Copyright (c) 2023 Data Science for Social Good (RPTU and DFKI) </h4>", unsafe_allow_html=True)
+    st.sidebar.markdown(
+        f"<h5 style='text-align: center; color: black;'>Copyright (c) 2023 Data Science for Social Good (RPTU and DFKI) </h4>",
+        unsafe_allow_html=True,
+    )
 
 
+psutil.cpu_count()
+psutil.virtual_memory()
+psutil.swap_memory()
+psutil.disk_usage("/")
 run_dashboard()
