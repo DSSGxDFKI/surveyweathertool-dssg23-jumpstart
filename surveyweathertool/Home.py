@@ -2,7 +2,7 @@ import pandas as pd
 from io import StringIO
 from PIL import Image
 import streamlit as st
-from src.dashboard.utils import read_logos
+from src.dashboard.utils import read_logos, check_memory_and_disk_usage
 import psutil
 
 
@@ -88,8 +88,6 @@ def run_dashboard():
     )
 
 
-psutil.cpu_count()
-psutil.virtual_memory()
-psutil.swap_memory()
-psutil.disk_usage("/")
+print(f"The number of CPUs of the web app: {psutil.cpu_count()}")
+check_memory_and_disk_usage()
 run_dashboard()

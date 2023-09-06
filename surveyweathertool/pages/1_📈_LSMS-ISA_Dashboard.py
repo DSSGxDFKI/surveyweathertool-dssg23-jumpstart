@@ -8,6 +8,7 @@ from src.dashboard.utils import (
     filter_weather,
     load_data_from_google_drive,
     dataframe_reader,
+    check_memory_and_disk_usage
 )
 from src.weather.weather_pipeline import (
     aggr_monthly,
@@ -64,6 +65,8 @@ wave_choice = 1
 possible_selections = 2
 disable_dropdown = True
 poverty_legend = "0: Not Deprived, 1: Moderately Deprived, 2: Severely Deprived"
+
+check_memory_and_disk_usage()
 
 # Use forms and submit button to batch input widgets
 with st.sidebar.form(key="columns_in_form"):
@@ -155,21 +158,28 @@ with st.sidebar.form(key="columns_in_form"):
 
 if submitted:
     st.toast("Weather data is being read and preprocessed", icon="⌛")
+    check_memory_and_disk_usage()
     with st.spinner("Weather data is being read and preprocessed..."):
         # Read Data for Dashboard (Once and st.caches it)
         nigeria_shape_df = read_shape_file(data_path=NIGERIA_SHAPE_PATH_FILE)
+        check_memory_and_disk_usage()
         precipitation_indicators_data = load_data_from_google_drive(
             file_to_load=PRECIPITATION_FILE
         )
+        check_memory_and_disk_usage()
         precipitation_indicators = pd.read_parquet(precipitation_indicators_data)
         temperature_indicators_data = load_data_from_google_drive(
             file_to_load=TEMPERATURE_FILE
         )
+        check_memory_and_disk_usage()
         temperature_indicators = pd.read_parquet(temperature_indicators_data)
+        check_memory_and_disk_usage()
     st.toast("Survey data is being read and preprocessed", icon="⌛")
     with st.spinner("Survey data is being read and preprocessed..."):
         lsms_survey_data = load_data_from_google_drive(file_to_load=LSMS_SURVEY_FILE)
+        check_memory_and_disk_usage()
         survey_data_df = pd.read_pickle(lsms_survey_data).reset_index()
+        check_memory_and_disk_usage()
         target_epsg = 4326
 
     if disable_dropdown == True:
