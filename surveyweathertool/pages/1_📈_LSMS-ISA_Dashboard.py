@@ -7,8 +7,7 @@ from src.dashboard.utils import (
     filter_survey,
     filter_weather,
     load_data_from_google_drive,
-    dataframe_reader,
-    check_memory_and_disk_usage
+    preprocess_weather_data
 )
 from src.weather.weather_pipeline import (
     aggr_monthly,
@@ -19,16 +18,17 @@ from src.weather.weather_pipeline import (
 from src.weather.utils import read_shape_file
 from src.weather.create_visuals import (
     generate_choropleth,
-    generate_interactive_time_series,
+    # generate_interactive_time_series,
     generate_bivariate_map,
     plot_poverty_index,
 )
-from src.weather.weather_pipeline import plot_heatmap_grid_on_map
+# from src.weather.weather_pipeline import plot_heatmap_grid_on_map
 from src.weather.constants import (
     TEMPERATURE_FILE,
     PRECIPITATION_FILE,
     NIGERIA_SHAPE_PATH_FILE,
     LSMS_SURVEY_FILE,
+    JOINED_WEATHER_DATA_FILE
 )
 from src.weather_x_survey.weather_survey import combine_with_poverty_index
 
@@ -51,7 +51,7 @@ st.markdown(
 # Add filters/input widgets with tooltips
 st.sidebar.markdown("Select Filters:")
 
-year_list = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019]
+year_list = [2010, 2011, 2012, 2013, 2014, 2015, 2016]
 year_choice_dropdown = st.sidebar.selectbox("Year", year_list, help="Year Selection")
 # Time Aggregation Choice Widget
 time_list = ["Yearly", "Seasonaly", "Monthly", "Survey-Dependent"]
@@ -65,8 +65,6 @@ wave_choice = 1
 possible_selections = 2
 disable_dropdown = True
 poverty_legend = "0: Not Deprived, 1: Moderately Deprived, 2: Severely Deprived"
-
-check_memory_and_disk_usage()
 
 # Use forms and submit button to batch input widgets
 with st.sidebar.form(key="columns_in_form"):
@@ -158,39 +156,37 @@ with st.sidebar.form(key="columns_in_form"):
 
 if submitted:
     st.toast("Weather data is being read and preprocessed", icon="⌛")
-    check_memory_and_disk_usage()
     with st.spinner("Weather data is being read and preprocessed..."):
         # Read Data for Dashboard (Once and st.caches it)
         nigeria_shape_df = read_shape_file(data_path=NIGERIA_SHAPE_PATH_FILE)
-        check_memory_and_disk_usage()
-        precipitation_indicators_data = load_data_from_google_drive(
-            file_to_load=PRECIPITATION_FILE
+        # precipitation_indicators_data = load_data_from_google_drive(
+        #     file_to_load=PRECIPITATION_FILE
+        # )
+        # precipitation_indicators = pd.read_parquet(precipitation_indicators_data)
+        # temperature_indicators_data = load_data_from_google_drive(
+        #     file_to_load=TEMPERATURE_FILE
+        # )
+        # temperature_indicators = pd.read_parquet(temperature_indicators_data)
+        weather_data = load_data_from_google_drive(
+            file_to_load=JOINED_WEATHER_DATA_FILE
         )
-        check_memory_and_disk_usage()
-        precipitation_indicators = pd.read_parquet(precipitation_indicators_data)
-        temperature_indicators_data = load_data_from_google_drive(
-            file_to_load=TEMPERATURE_FILE
-        )
-        check_memory_and_disk_usage()
-        temperature_indicators = pd.read_parquet(temperature_indicators_data)
-        check_memory_and_disk_usage()
+        weather_data_df = pd.read_parquet(weather_data)
+        weather_data_df = preprocess_weather_data(weather_data_df)
     st.toast("Survey data is being read and preprocessed", icon="⌛")
     with st.spinner("Survey data is being read and preprocessed..."):
         lsms_survey_data = load_data_from_google_drive(file_to_load=LSMS_SURVEY_FILE)
-        check_memory_and_disk_usage()
         survey_data_df = pd.read_pickle(lsms_survey_data).reset_index()
-        check_memory_and_disk_usage()
         target_epsg = 4326
 
     if disable_dropdown == True:
         poverty_index_dropdown = None
 
     dict_value_cols = {
-        "Precipitation (mm)": (precipitation_indicators, "Blues"),
-        "Temperature (°C)": (temperature_indicators, "Reds"),
-        "Drought": (precipitation_indicators, "Blues"),
-        "Heavy Rain": (precipitation_indicators, "Blues"),
-        "Heat Wave": (temperature_indicators, "Blues"),
+        "Precipitation (mm)": (weather_data_df, "Blues"),
+        "Temperature (°C)": (weather_data_df, "Reds"),
+        "Drought": (weather_data_df, "Blues"),
+        "Heavy Rain": (weather_data_df, "Blues"),
+        "Heat Wave": (weather_data_df, "Blues"),
     }
 
     weather_indicators = {
@@ -365,32 +361,32 @@ if submitted:
             #     )
             # )
 
-            st.markdown(
-                f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
-                unsafe_allow_html=True,
-            )
-            st.pyplot(
-                plot_heatmap_grid_on_map(
-                    df=filtered_grid_1,
-                    value_col="mean",
-                    geo_df=nigeria_shape_df,
-                    legend_title=legends[weather_dropdown[0]],
-                    cmap=dict_value_cols[weather_dropdown[0]][1],
-                )
-            )
-            st.markdown(
-                f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[1]} </h4>",
-                unsafe_allow_html=True,
-            )
-            st.pyplot(
-                plot_heatmap_grid_on_map(
-                    df=filtered_grid_2,
-                    value_col="mean",
-                    geo_df=nigeria_shape_df,
-                    legend_title=legends[weather_dropdown[1]],
-                    cmap=dict_value_cols[weather_dropdown[1]][1],
-                )
-            )
+            # st.markdown(
+            #     f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
+            #     unsafe_allow_html=True,
+            # )
+            # st.pyplot(
+            #     plot_heatmap_grid_on_map(
+            #         df=filtered_grid_1,
+            #         value_col="mean",
+            #         geo_df=nigeria_shape_df,
+            #         legend_title=legends[weather_dropdown[0]],
+            #         cmap=dict_value_cols[weather_dropdown[0]][1],
+            #     )
+            # )
+            # st.markdown(
+            #     f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[1]} </h4>",
+            #     unsafe_allow_html=True,
+            # )
+            # st.pyplot(
+            #     plot_heatmap_grid_on_map(
+            #         df=filtered_grid_2,
+            #         value_col="mean",
+            #         geo_df=nigeria_shape_df,
+            #         legend_title=legends[weather_dropdown[1]],
+            #         cmap=dict_value_cols[weather_dropdown[1]][1],
+            #     )
+            # )
 
             st.markdown(
                 f"<h4 style='text-align: center; color: black;'>Univariate map for {weather_dropdown[0]} </h4>",
@@ -490,19 +486,19 @@ if submitted:
             #     )
             # )
 
-            st.markdown(
-                f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
-                unsafe_allow_html=True,
-            )
-            st.pyplot(
-                plot_heatmap_grid_on_map(
-                    df=aggregated_prec_grid_1_year.copy(),
-                    geo_df=nigeria_shape_df,
-                    value_col="mean",
-                    legend_title=legends[weather_dropdown[0]],
-                    cmap=dict_value_cols[weather_dropdown[0]][1],
-                )
-            )
+            # st.markdown(
+            #     f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
+            #     unsafe_allow_html=True,
+            # )
+            # st.pyplot(
+            #     plot_heatmap_grid_on_map(
+            #         df=aggregated_prec_grid_1_year.copy(),
+            #         geo_df=nigeria_shape_df,
+            #         value_col="mean",
+            #         legend_title=legends[weather_dropdown[0]],
+            #         cmap=dict_value_cols[weather_dropdown[0]][1],
+            #     )
+            # )
 
             st.markdown(
                 f"<h4 style='text-align: center; color: black;'>Univariate map for {poverty_index_dropdown} </h4>",
@@ -610,19 +606,19 @@ if submitted:
             #     )
             # )
 
-            st.markdown(
-                f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
-                unsafe_allow_html=True,
-            )
-            st.pyplot(
-                plot_heatmap_grid_on_map(
-                    df=filtered_grid_1,
-                    geo_df=nigeria_shape_df,
-                    value_col="mean",
-                    legend_title=legends[weather_dropdown[0]],
-                    cmap=dict_value_cols[weather_dropdown[0]][1],
-                )
-            )
+            # st.markdown(
+            #     f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
+            #     unsafe_allow_html=True,
+            # )
+            # st.pyplot(
+            #     plot_heatmap_grid_on_map(
+            #         df=filtered_grid_1,
+            #         geo_df=nigeria_shape_df,
+            #         value_col="mean",
+            #         legend_title=legends[weather_dropdown[0]],
+            #         cmap=dict_value_cols[weather_dropdown[0]][1],
+            #     )
+            # )
 
             st.markdown(
                 f"<h4 style='text-align: center; color: black;'>Univariate map for {weather_dropdown[0]} </h4>",
@@ -705,20 +701,20 @@ if submitted:
 # Side Bar Set Up
 st.sidebar.markdown(
     """
-         <style>
+        <style>
             [data-testid="stVerticalBlock"] > img:first-child {
-                  margin-top: -60px;
+                margin-top: -60px;
             }
 
             [data-testid=stImage]{
-                  text-align: center;
-                  display: block;
-                  margin-left: auto;
-                  margin-right: auto;
-                  width: 100%;
+                text-align: center;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 100%;
             }
-         </style>
-         """,
+        </style>
+        """,
     unsafe_allow_html=True,
 )
 

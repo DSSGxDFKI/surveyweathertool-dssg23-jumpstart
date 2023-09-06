@@ -13,13 +13,11 @@ from src.dashboard.utils import (
     check_if_df_has_lat_long,
     preprocess_data_input,
     preprocess_weather_data,
-    load_data_from_google_drive,
-    dataframe_reader,
-    check_memory_and_disk_usage
+    load_data_from_google_drive
 )
 from src.weather_x_survey.weather_survey import merge_weather_household
 
-from src.weather.constants import PRECIPITATION_FILE, TEMPERATURE_FILE
+from src.weather.constants import PRECIPITATION_FILE, TEMPERATURE_FILE, JOINED_WEATHER_DATA_FILE
 
 # Page Configuration
 st.set_page_config(page_title="Weather Data Enhancement", page_icon="📊")
@@ -59,8 +57,6 @@ st.sidebar.markdown(
 # Add file upload element
 uploaded_file = st.file_uploader("Choose a file to add weather columns", type="csv")
 
-check_memory_and_disk_usage()
-
 
 # Run the following code only if a file is uploaded
 if uploaded_file is not None:
@@ -68,8 +64,6 @@ if uploaded_file is not None:
     start_time = time.time()
     # Read the file
     input = pd.read_csv(uploaded_file)
-    check_memory_and_disk_usage()
-
     # Display the top 5 rows of the file
     st.write("This is the uploaded input data:")
     st.write(input.head(5))
@@ -77,32 +71,31 @@ if uploaded_file is not None:
     input = preprocess_data_input(input)
     # Error checks file
     check_if_df_has_lat_long(input)
-    check_memory_and_disk_usage()
 
     # Read Weather data (Temp and Precip with climate columns) and preprocess it
     st.toast("Weather data is being read and preprocessed", icon="⌛")
     with st.spinner("Weather data is being read and preprocessed..."):
-        check_memory_and_disk_usage()
-        precipitation_indicators_data = load_data_from_google_drive(
-            file_to_load=PRECIPITATION_FILE
-        )
-        precipitation_indicators = pd.read_parquet(precipitation_indicators_data)
-        precipitation_indicators = preprocess_weather_data(precipitation_indicators)
-        check_memory_and_disk_usage()
-        temperature_indicators_data = load_data_from_google_drive(
-            file_to_load=TEMPERATURE_FILE
-        )
-        temperature_indicators = pd.read_parquet(temperature_indicators_data)
-        temperature_indicators = preprocess_weather_data(temperature_indicators)
-
-        check_memory_and_disk_usage()
+        # precipitation_indicators_data = load_data_from_google_drive(
+        #     file_to_load=PRECIPITATION_FILE
+        # )
+        # precipitation_indicators = pd.read_parquet(precipitation_indicators_data)
+        # precipitation_indicators = preprocess_weather_data(precipitation_indicators)
+        # temperature_indicators_data = load_data_from_google_drive(
+        #     file_to_load=TEMPERATURE_FILE
+        # )
+        # temperature_indicators = pd.read_parquet(temperature_indicators_data)
+        # temperature_indicators = preprocess_weather_data(temperature_indicators)
 
         # Defining all indicators to aggregate and return attached to uploaded data
         weather_data_indicators_dict = {
             "precipitation": ["precipitation", "heavy_rain_index", "spi_index"],
             "temperature": ["temperature", "heatwave_index"],
         }
-
+        weather_data = load_data_from_google_drive(
+            file_to_load=JOINED_WEATHER_DATA_FILE
+        )
+        weather_data_df = pd.read_parquet(weather_data)
+        weather_data_df = preprocess_weather_data(weather_data_df)
         merged_data = input.copy()
 
     st.toast("Weather features are being created", icon="⌛")
@@ -110,14 +103,13 @@ if uploaded_file is not None:
     with st.spinner("Weather features are being created..."):
         for key, value_cols in weather_data_indicators_dict.items():
             if key == "precipitation":
-                weather_df = precipitation_indicators.copy()
+                weather_df = weather_data_df
             elif key == "temperature":
-                weather_df = temperature_indicators.copy()
+                weather_df = weather_data_df
             for indicator in value_cols:
                 # Retrieve weather information for the input using interpolated weather data
-                check_memory_and_disk_usage()
                 merged_weather_data = merge_weather_household(
-                    input, weather_df.copy(), indicator
+                    input, weather_df, indicator
                 )
                 merged_data = pd.merge(
                     merged_data,
@@ -125,7 +117,6 @@ if uploaded_file is not None:
                     how="left",
                     on=["lat", "lon", "date"],
                 )
-                check_memory_and_disk_usage()
 
     st.toast("Weather features have been successfully created", icon="⌛")
     # Print out new dataset and get it download-ready
@@ -144,20 +135,20 @@ if uploaded_file is not None:
 # Side Bar Set Up
 st.sidebar.markdown(
     """
-         <style>
+        <style>
             [data-testid="stVerticalBlock"] > img:first-child {
-                  margin-top: -60px;
+                margin-top: -60px;
             }
 
             [data-testid=stImage]{
-                  text-align: center;
-                  display: block;
-                  margin-left: auto;
-                  margin-right: auto;
-                  width: 100%;
+                text-align: center;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 100%;
             }
-         </style>
-         """,
+        </style>
+        """,
     unsafe_allow_html=True,
 )
 

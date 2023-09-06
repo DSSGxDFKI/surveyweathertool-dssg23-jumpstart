@@ -149,6 +149,9 @@ def get_weather_for_household_survey(
         # Select the weather data for this date and reset index
         weather_df_date = weather_df[weather_df["date"] == date].reset_index(drop=True)
 
+        if len(weather_df_date) == 0:
+            print(f"WARNING: For the date {date} there is no weather data!")
+
         
 
         # Calculate the nearest points and distances

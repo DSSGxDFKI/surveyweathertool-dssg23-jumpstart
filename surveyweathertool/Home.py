@@ -2,9 +2,7 @@ import pandas as pd
 from io import StringIO
 from PIL import Image
 import streamlit as st
-from src.dashboard.utils import read_logos, check_memory_and_disk_usage
-import psutil
-
+from src.dashboard.utils import read_logos
 
 def run_dashboard():
     # # Home Page Configuration
@@ -87,7 +85,4 @@ def run_dashboard():
         unsafe_allow_html=True,
     )
 
-logging.info(f"The number of CPUs of the web app: {psutil.cpu_count()}")
-print(f"The number of CPUs of the web app: {psutil.cpu_count()}")
-check_memory_and_disk_usage()
 run_dashboard()
