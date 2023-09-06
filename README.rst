@@ -1,11 +1,6 @@
 Analysing Impact of Climate Change on Child Poverty
 ==================================================
 
-.. todo:: 
-    Check and resolve references to other docs and website
-
-    Add badges as desired
-
 As a part of the Data Science for Social Good Fellowship (DSSGx) Kaiserslautern 2023, team 'jmpst' researched and created data pipelines for future multivariate statistical analyses on the impacts of extreme weather events on child poverty and developed an extensible data dashboard for visualization.
 
 Data Science for Social Good
