@@ -1,0 +1,5 @@
+# Ignoring the secrets.toml storing credentials used with the Streamlit web app
+**/secrets.toml
+
+# Ignoring all pycache
+**/__pycache__/*
