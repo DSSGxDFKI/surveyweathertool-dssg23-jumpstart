@@ -52,24 +52,19 @@ Please create the following empty folder structure in your local machine. This i
 .. code-block:: console
 
     data
-    ├── nigeria
-        ├── processed
-        │   ├── survey
-        │   └── weather
-        │       ├── precipitation
-        │       └── temperature
-        └── raw
-            ├── shapefiles
-            ├── survey
-            └── weather
-                ├── precipitation
-                │   ├── 1_raw_nc
-                │   └── 2_nc_to_pickle
-                └── temperature
-                    ├── 1_raw_nc
-                    ├── 2_nc_to_pickle
-                    └── 3_interpolated
-    ├── <country-name>
+    ├── processed
+    │   ├── survey
+    │   |   └── nigeria
+    │   ├── survey_weather
+    │   └── weather
+    │       ├── era5_temperature
+    │       ├── flood_data
+    │       ├── interpolated_weather
+    │       └── nasa_historical_precipitation
+    └── raw
+        ├── nga_admin
+        ├── survey
+            └── nigeria
 
 The `processed` folder is the destination for  final outputs from the pipeline, best used for further statistical analysis. The `raw` data folder contains the freshly downloaded, and some stages of intermediate processed data.
 
