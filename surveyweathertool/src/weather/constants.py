@@ -25,15 +25,12 @@ RAW_PATH_INTERPOLATED_TEMPERATURE = (
     f"{PROCESSED_WEATHER_PATH}/era5_temperature/final_temperature_interpolated.pickle"
 )
 RAW_PATH_NIG_CLIPPED_PRECIPITATION = f"{PROCESSED_WEATHER_PATH}/nasa_historical_precipitation/final_clipped_precipitation.pickle"
-SPI_PATH_FILE = (
+
+PRECIPITATION_INDICATORS = (
     f"{PROCESSED_WEATHER_PATH}/interpolated_weather/all_precipitation_indicators.pickle"
 )
-PRECIPITATION_INDICATORS = (
-    f"{PATH_DASHBOARD_INPUT_DATA}/all_precipitation_indicators.parquet"
-)
-TEMPERATURE_INDICATORS = (
-    f"{PATH_DASHBOARD_INPUT_DATA}/all_temperature_interpolated_indicators.parquet"
-)
+TEMPERATURE_INDICATORS = f"{PROCESSED_WEATHER_PATH}/interpolated_weather/all_temperature_interpolated_indicators.pickle"
+SPI_PATH_FILE = PRECIPITATION_INDICATORS
 
 # Dasbhoard input data on Google Drive
 LSMS_SURVEY_FILE = "16K6TFFe9nZD_tos5YDBrEVWHAA4zNx4P"

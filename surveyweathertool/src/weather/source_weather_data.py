@@ -190,7 +190,7 @@ def get_weather_data(
         else:
             pd.to_pickle(
                 weather_precipitation_df,
-                "/app/data/processed/weather/interpolated_weather/all_precipitation_indicators.pickle",
+                PRECIPITATION_INDICATORS,
             )
 
         if os.path.exists(TEMPERATURE_INDICATORS):
@@ -198,6 +198,6 @@ def get_weather_data(
         else:
             pd.to_pickle(
                 weather_temperature_df,
-                "/app/data/processed/weather/interpolated_weather/all_temperature_interpolated_indicators.pickle",
+                TEMPERATURE_INDICATORS,
             )
     return (nigeria_shape_df, weather_temperature_df, weather_precipitation_df)
