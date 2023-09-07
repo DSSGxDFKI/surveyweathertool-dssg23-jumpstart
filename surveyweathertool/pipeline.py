@@ -41,17 +41,6 @@ def run_pipeline(
         GEO_COLUMNS=GEO_COLUMNS,
     )
 
-    combined_weather_map = combine_map_weather(
-        nigeria_shape_df=nigeria_shape_df,
-        weather_precipitation_df=weather_precipitation_df,
-        weather_temperature_df=weather_temperature_df,
-        col_dissolve=col_dissolve,
-        weather_data_name=weather_data_name,
-        agg_dict=agg_dict,
-        level=level,
-        target_epsg=target_epsg,
-    )
-
 
 if __name__ == "__main__":
     run_pipeline(source_weather_data=False)
