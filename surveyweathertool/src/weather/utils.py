@@ -763,14 +763,14 @@ def preprocess_weather_datasets(
     temp_data = temp_data[needed_cols_temp]
 
     # Round all float cols to 2 decimals
-    float_cols_precip = list(set(needed_cols_precip) - non_float_cols)
-    float_cols_temp = list(set(needed_cols_temp) - non_float_cols)
+    float_cols_precip = list(set(needed_cols_precip) - set(non_float_cols))
+    float_cols_temp = list(set(needed_cols_temp) - set(non_float_cols))
 
     for col in float_cols_precip:
-        precip_data[col] = precip_data[col].round(1)
+        precip_data.loc[:,col] = precip_data.loc[:,col].round(1)
 
     for col in float_cols_temp:
-        temp_data[col] = temp_data[col].round(1)
+        temp_data.loc[:,col] = temp_data.loc[:,col].round(1)
 
     # Rename columns
     for key in cols_rename_dict.keys():
