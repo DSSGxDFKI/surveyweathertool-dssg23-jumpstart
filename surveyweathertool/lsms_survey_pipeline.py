@@ -54,3 +54,6 @@ def run_survey_pipeline():
     print("Successful end of survey prototype script")
 
     return
+
+if __name__ == "__main__":
+    run_survey_pipeline()
