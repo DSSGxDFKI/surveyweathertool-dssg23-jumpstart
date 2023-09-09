@@ -24,7 +24,7 @@ The goal of this project is to reduce the entry barrier for research and analysi
 
 Solution
 --------
-We created a data dashboard which allows users to explore and visualize extreme weather and poverty datasets. The dashboard also allows users to upload geographical coordinates and receive weather time series for those locations. We also created data and feature engineering pipelines for LSMS-ISA surveys and extreme weather data.
+We created a `data dashboard <https://dssg23-surveyweathertool.streamlit.app/>`_ which allows users to explore and visualize extreme weather and poverty datasets. The dashboard also allows users to upload geographical coordinates and receive weather time series for those locations. We also created data and feature engineering pipelines for LSMS-ISA surveys and extreme weather data.
 
 .. image:: /docs/_static/bivariate_map.png
    :alt: Bivariate Map
