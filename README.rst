@@ -1,19 +1,5 @@
 
-|MIT license|
-
-.. |MIT license| image:: https://img.shields.io/badge/License-MIT-blue.svg
-   :target: https://lbesson.mit-license.org/
-
-|Documentation Status|
-
-.. |Documentation Status| image:: https://readthedocs.org/projects/ansicolortags/badge/?version=latest
-   :target: https://surveyweathertool-dssg23-jumpstart.rtfd.io/
-
-|made-with-python|
-
-.. |made-with-python| image:: https://img.shields.io/badge/Made%20with-Python-1f425f.svg
-   :target: https://www.python.org/
-
+|MIT license| |Documentation Status| |made-with-python|
 
 Analysing Impact of Climate Change on Child Poverty
 ==================================================
@@ -162,3 +148,12 @@ In case you utilise the project in your work, Bibtex citation is available below
 The project is released under the MIT License.
 
 Copyright (c) 2023 Data Science for Social Good (RPTU and DFKI)
+
+.. |MIT license| image:: https://img.shields.io/badge/License-MIT-blue.svg
+   :target: https://lbesson.mit-license.org/
+
+.. |Documentation Status| image:: https://readthedocs.org/projects/ansicolortags/badge/?version=latest
+   :target: https://surveyweathertool-dssg23-jumpstart.rtfd.io/
+
+.. |made-with-python| image:: https://img.shields.io/badge/Made%20with-Python-1f425f.svg
+   :target: https://www.python.org/
