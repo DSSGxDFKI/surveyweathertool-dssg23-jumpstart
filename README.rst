@@ -1,3 +1,6 @@
+
+|MIT license| |Documentation Status| |made-with-python|
+
 Analysing Impact of Climate Change on Child Poverty
 ==================================================
 
@@ -21,7 +24,7 @@ The goal of this project is to reduce the entry barrier for research and analysi
 
 Solution
 --------
-We created a data dashboard which allows users to explore and visualize extreme weather and poverty datasets. The dashboard also allows users to upload geographical coordinates and receive weather time series for those locations. We also created data and feature engineering pipelines for LSMS-ISA surveys and extreme weather data.
+We created a `data dashboard <https://dssg23-surveyweathertool.streamlit.app/>`_ which allows users to explore and visualize extreme weather and poverty datasets. The dashboard also allows users to upload geographical coordinates and receive weather time series for those locations. We also created data and feature engineering pipelines for LSMS-ISA surveys and extreme weather data.
 
 .. image:: /docs/_static/bivariate_map.png
    :alt: Bivariate Map
@@ -145,3 +148,12 @@ In case you utilise the project in your work, Bibtex citation is available below
 The project is released under the MIT License.
 
 Copyright (c) 2023 Data Science for Social Good (RPTU and DFKI)
+
+.. |MIT license| image:: https://img.shields.io/badge/License-MIT-blue.svg
+   :target: https://lbesson.mit-license.org/
+
+.. |Documentation Status| image:: https://readthedocs.org/projects/ansicolortags/badge/?version=latest
+   :target: https://surveyweathertool-dssg23-jumpstart.rtfd.io/
+
+.. |made-with-python| image:: https://img.shields.io/badge/Made%20with-Python-1f425f.svg
+   :target: https://www.python.org/
