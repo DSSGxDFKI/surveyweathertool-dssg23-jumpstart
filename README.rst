@@ -70,15 +70,15 @@ Getting Started
 
 .. code-block:: console
 
-   (.venv) $ git clone https://git.opendfki.de/dssgxdfki/dssg23-unicef.git
+   (.venv) $ git clone https://github.com/DSSGxDFKI/surveyweathertool-dssg23-jumpstart.git
 
-This will create a folder called `dssg23-unicef` in your current directory. This folder contains all the code needed to run the project.
+This will create a folder called `surveyweathertool-dssg23-jumpstart` in your current directory. This folder contains all the code needed to run the project.
 
 3. Download the data
     - Download all the raw datasets required to run the project in the exact same file heirarchy as described and shown in the instructions on sourcing the survey data and weather data. Further information on which datasets to download, and how to store them is available in :ref:`docs/getting-started`. Let the absolute path to the top level of the data directory be `/path/to/data`.
 
 4. Build docker
-    - In a terminal, navigate to the `dssg23-unicef` folder and run the following command to build the Docker container:
+    - In a terminal, navigate to the repository folder and run the following command to build the Docker container:
 
 .. code-block:: console
 
@@ -104,7 +104,7 @@ The package was developed during DSSGxGermany 2023, in partnership with Save the
 
 We thank the project staff for their guidance and support:
 
-- Julia Ostheimer - Project Technical Mentor
+- `Julia Ostheimer - Project Technical Mentor <https://github.com/JOPloume>`_
  
 - Gernot Schreider - Project Manager
  
