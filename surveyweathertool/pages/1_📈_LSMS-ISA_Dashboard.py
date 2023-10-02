@@ -18,11 +18,12 @@ from src.weather.weather_pipeline import (
 from src.weather.utils import read_shape_file
 from src.weather.create_visuals import (
     generate_choropleth,
-    # generate_interactive_time_series,
+    generate_interactive_time_series,
     generate_bivariate_map,
     plot_poverty_index,
 )
-# from src.weather.weather_pipeline import plot_heatmap_grid_on_map
+
+from src.weather.weather_pipeline import plot_heatmap_grid_on_map
 from src.weather.constants import (
     TEMPERATURE_FILE,
     PRECIPITATION_FILE,
@@ -308,14 +309,6 @@ if submitted:
                 month=month_choice_dropdown,
                 season=season_choice,
             )
-            # time_series_1 = filter_weather(
-            #     weather_df=dict_value_cols[weather_dropdown[0]][0].copy(),
-            #     year=year_choice_dropdown,
-            # )
-            # time_series_2 = filter_weather(
-            #     weather_df=dict_value_cols[weather_dropdown[1]][0].copy(),
-            #     year=year_choice_dropdown,
-            # )
 
             if level == "month":
                 aggregated_prec_grid_1 = aggr_monthly(
@@ -379,43 +372,53 @@ if submitted:
             )
             folium_static(bivariate_map)
 
-            # st.plotly_chart(
-            #     generate_interactive_time_series(
-            #         df=time_series_1.copy(), weather_data_name=weather_columns[0]
-            #     )
-            # )
-            # st.plotly_chart(
-            #     generate_interactive_time_series(
-            #         df=time_series_2.copy(), weather_data_name=weather_columns[1]
-            #     )
-            # )
+            if computation == "high_resource":
+                time_series_1 = filter_weather(
+                    weather_df=dict_value_cols[weather_dropdown[0]][0].copy(),
+                    year=year_choice_dropdown,
+                )
+                time_series_2 = filter_weather(
+                    weather_df=dict_value_cols[weather_dropdown[1]][0].copy(),
+                    year=year_choice_dropdown,
+                )
 
-            # st.markdown(
-            #     f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
-            #     unsafe_allow_html=True,
-            # )
-            # st.pyplot(
-            #     plot_heatmap_grid_on_map(
-            #         df=filtered_grid_1,
-            #         value_col="mean",
-            #         geo_df=nigeria_shape_df,
-            #         legend_title=legends[weather_dropdown[0]],
-            #         cmap=dict_value_cols[weather_dropdown[0]][1],
-            #     )
-            # )
-            # st.markdown(
-            #     f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[1]} </h4>",
-            #     unsafe_allow_html=True,
-            # )
-            # st.pyplot(
-            #     plot_heatmap_grid_on_map(
-            #         df=filtered_grid_2,
-            #         value_col="mean",
-            #         geo_df=nigeria_shape_df,
-            #         legend_title=legends[weather_dropdown[1]],
-            #         cmap=dict_value_cols[weather_dropdown[1]][1],
-            #     )
-            # )
+                st.plotly_chart(
+                    generate_interactive_time_series(
+                        df=time_series_1.copy(), weather_data_name=weather_columns[0]
+                    )
+                )
+                st.plotly_chart(
+                    generate_interactive_time_series(
+                        df=time_series_2.copy(), weather_data_name=weather_columns[1]
+                    )
+                )
+
+                st.markdown(
+                    f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
+                    unsafe_allow_html=True,
+                )
+                st.pyplot(
+                    plot_heatmap_grid_on_map(
+                        df=filtered_grid_1,
+                        value_col="mean",
+                        geo_df=nigeria_shape_df,
+                        legend_title=legends[weather_dropdown[0]],
+                        cmap=dict_value_cols[weather_dropdown[0]][1],
+                    )
+                )
+                st.markdown(
+                    f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[1]} </h4>",
+                    unsafe_allow_html=True,
+                )
+                st.pyplot(
+                    plot_heatmap_grid_on_map(
+                        df=filtered_grid_2,
+                        value_col="mean",
+                        geo_df=nigeria_shape_df,
+                        legend_title=legends[weather_dropdown[1]],
+                        cmap=dict_value_cols[weather_dropdown[1]][1],
+                    )
+                )
 
             st.markdown(
                 f"<h4 style='text-align: center; color: black;'>Univariate map for {weather_dropdown[0]} </h4>",
@@ -504,30 +507,32 @@ if submitted:
             )
             folium_static(bivariate_map)
 
-            # st.plotly_chart(
-            #     generate_interactive_time_series(
-            #         df=filtered_df_2.copy(), weather_data_name="mean"
-            #     )
-            # )
-            # st.plotly_chart(
-            #     generate_interactive_time_series(
-            #         df=survey_data_df.copy(), weather_data_name=poverty_indicators[poverty_index_dropdown]
-            #     )
-            # )
+            if computation == "high_resource":
+                st.plotly_chart(
+                    generate_interactive_time_series(
+                        df=filtered_df_2.copy(), weather_data_name="mean"
+                    )
+                )
+                st.plotly_chart(
+                    generate_interactive_time_series(
+                        df=survey_data_df.copy(),
+                        weather_data_name=poverty_indicators[poverty_index_dropdown],
+                    )
+                )
 
-            # st.markdown(
-            #     f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
-            #     unsafe_allow_html=True,
-            # )
-            # st.pyplot(
-            #     plot_heatmap_grid_on_map(
-            #         df=aggregated_prec_grid_1_year.copy(),
-            #         geo_df=nigeria_shape_df,
-            #         value_col="mean",
-            #         legend_title=legends[weather_dropdown[0]],
-            #         cmap=dict_value_cols[weather_dropdown[0]][1],
-            #     )
-            # )
+                st.markdown(
+                    f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
+                    unsafe_allow_html=True,
+                )
+                st.pyplot(
+                    plot_heatmap_grid_on_map(
+                        df=aggregated_prec_grid_1_year.copy(),
+                        geo_df=nigeria_shape_df,
+                        value_col="mean",
+                        legend_title=legends[weather_dropdown[0]],
+                        cmap=dict_value_cols[weather_dropdown[0]][1],
+                    )
+                )
 
             st.markdown(
                 f"<h4 style='text-align: center; color: black;'>Univariate map for {poverty_index_dropdown} </h4>",
@@ -619,35 +624,36 @@ if submitted:
                 season=season_choice,
             )
 
-            # st.plotly_chart(
-            #     generate_interactive_time_series(
-            #         df=filtered_df_1.copy(), weather_data_name=weather_columns[0]
-            #     )
-            # )
+            if computation == "high_resource":
+                st.plotly_chart(
+                    generate_interactive_time_series(
+                        df=filtered_df_1.copy(), weather_data_name=weather_columns[0]
+                    )
+                )
 
-            # time_series_1 = filter_weather(
-            #     weather_df=dict_value_cols[weather_dropdown[0]][0].copy(),
-            #     year=year_choice_dropdown,
-            # )
-            # st.plotly_chart(
-            #     generate_interactive_time_series(
-            #         df=time_series_1.copy(), weather_data_name=weather_columns[0]
-            #     )
-            # )
+                time_series_1 = filter_weather(
+                    weather_df=dict_value_cols[weather_dropdown[0]][0].copy(),
+                    year=year_choice_dropdown,
+                )
+                st.plotly_chart(
+                    generate_interactive_time_series(
+                        df=time_series_1.copy(), weather_data_name=weather_columns[0]
+                    )
+                )
 
-            # st.markdown(
-            #     f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
-            #     unsafe_allow_html=True,
-            # )
-            # st.pyplot(
-            #     plot_heatmap_grid_on_map(
-            #         df=filtered_grid_1,
-            #         geo_df=nigeria_shape_df,
-            #         value_col="mean",
-            #         legend_title=legends[weather_dropdown[0]],
-            #         cmap=dict_value_cols[weather_dropdown[0]][1],
-            #     )
-            # )
+                st.markdown(
+                    f"<h4 style='text-align: center; color: black;'>Heatmap for {weather_dropdown[0]} </h4>",
+                    unsafe_allow_html=True,
+                )
+                st.pyplot(
+                    plot_heatmap_grid_on_map(
+                        df=filtered_grid_1,
+                        geo_df=nigeria_shape_df,
+                        value_col="mean",
+                        legend_title=legends[weather_dropdown[0]],
+                        cmap=dict_value_cols[weather_dropdown[0]][1],
+                    )
+                )
 
             st.markdown(
                 f"<h4 style='text-align: center; color: black;'>Univariate map for {weather_dropdown[0]} </h4>",
@@ -699,11 +705,13 @@ if submitted:
                     fill_color="Reds",
                 )
             )
-            # st.plotly_chart(
-            #     generate_interactive_time_series(
-            #         df=survey_data_df.copy(), weather_data_name=weather_columns[0]
-            #     )
-            # )
+
+            if computation == "high_resource":
+                st.plotly_chart(
+                    generate_interactive_time_series(
+                        df=survey_data_df.copy(), weather_data_name=weather_columns[0]
+                    )
+                )
 
             st.markdown(
                 f"<h4 style='text-align: center; color: black;'>Households on map for {poverty_index_dropdown} </h4>",
