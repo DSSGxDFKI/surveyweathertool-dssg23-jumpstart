@@ -236,7 +236,16 @@ def parse_command_arguments() -> tuple:
     parser.add_argument("-c", "--computation", type=str)
 
     args = parser.parse_args()
-    datalocation = args.datalocation
+
     computation = args.computation
+
+    if args.datalocation is None:
+        datalocation = "gdrive"
+    else:
+        datalocation = args.datalocation
+    if args.computation is None:
+        computation = "low_resource"
+    else:
+        computation = args.computation
 
     return (datalocation, computation)
