@@ -26,12 +26,18 @@ from src.weather.create_visuals import (
 from src.weather.constants import (
     TEMPERATURE_FILE,
     PRECIPITATION_FILE,
+    TEMPERATURE_INDICATORS,
+    PRECIPITATION_INDICATORS,
     NIGERIA_SHAPE_PATH_FILE,
     LSMS_SURVEY_FILE,
     JOINED_WEATHER_DATA_FILE
 )
+from src.survey.constants import SURVEY_FINAL_PATH
 from src.weather_x_survey.weather_survey import combine_with_poverty_index
+from src.dashboard.utils import parse_command_arguments
 
+# Parse the arguments passend when running the streamlit run command
+datalocation, computation = parse_command_arguments()
 # Page Configuration
 st.set_page_config(page_title="LSMS-ISA Dashboard", page_icon="📈")
 
@@ -159,35 +165,58 @@ if submitted:
     with st.spinner("Weather data is being read and preprocessed..."):
         # Read Data for Dashboard (Once and st.caches it)
         nigeria_shape_df = read_shape_file(data_path=NIGERIA_SHAPE_PATH_FILE)
-        # precipitation_indicators_data = load_data_from_google_drive(
-        #     file_to_load=PRECIPITATION_FILE
-        # )
-        # precipitation_indicators = pd.read_parquet(precipitation_indicators_data)
-        # temperature_indicators_data = load_data_from_google_drive(
-        #     file_to_load=TEMPERATURE_FILE
-        # )
-        # temperature_indicators = pd.read_parquet(temperature_indicators_data)
-        weather_data = load_data_from_google_drive(
-            file_to_load=JOINED_WEATHER_DATA_FILE
-        )
-        weather_data_df = pd.read_parquet(weather_data)
-        weather_data_df = preprocess_weather_data(weather_data_df)
+
+        if datalocation == "gdrive" and computation == "low_resource":
+            weather_data = load_data_from_google_drive(
+                file_to_load=JOINED_WEATHER_DATA_FILE
+            )
+            weather_data_df = pd.read_parquet(weather_data)
+            weather_data_df = preprocess_weather_data(weather_data_df)
+
+        elif datalocation == "gdrive" and computation == "high_resource":
+            precipitation_indicators_data = load_data_from_google_drive(
+                file_to_load=PRECIPITATION_FILE
+            )
+            precipitation_indicators = pd.read_parquet(precipitation_indicators_data)
+            temperature_indicators_data = load_data_from_google_drive(
+                file_to_load=TEMPERATURE_FILE
+            )
+            temperature_indicators = pd.read_parquet(temperature_indicators_data)
+
+        elif datalocation == "local" and computation == "high_resource":
+            precipitation_indicators = pd.read_parquet(PRECIPITATION_INDICATORS)
+            temperature_indicators = pd.read_parquet(TEMPERATURE_INDICATORS)
+
     st.toast("Survey data is being read and preprocessed", icon="⌛")
     with st.spinner("Survey data is being read and preprocessed..."):
-        lsms_survey_data = load_data_from_google_drive(file_to_load=LSMS_SURVEY_FILE)
+        if datalocation == "gdrive":
+            lsms_survey_data = load_data_from_google_drive(
+                file_to_load=LSMS_SURVEY_FILE
+            )
+        else:
+            lsms_survey_data = SURVEY_FINAL_PATH
         survey_data_df = pd.read_pickle(lsms_survey_data).reset_index()
         target_epsg = 4326
 
     if disable_dropdown == True:
         poverty_index_dropdown = None
 
-    dict_value_cols = {
-        "Precipitation (mm)": (weather_data_df, "Blues"),
-        "Temperature (°C)": (weather_data_df, "Reds"),
-        "Drought": (weather_data_df, "Blues"),
-        "Heavy Rain": (weather_data_df, "Blues"),
-        "Heat Wave": (weather_data_df, "Blues"),
-    }
+    if computation == "low_resource":
+        dict_value_cols = {
+            "Precipitation (mm)": (weather_data_df, "Blues"),
+            "Temperature (°C)": (weather_data_df, "Reds"),
+            "Drought": (weather_data_df, "Blues"),
+            "Heavy Rain": (weather_data_df, "Blues"),
+            "Heat Wave": (weather_data_df, "Blues"),
+        }
+    else:
+        dict_value_cols = {
+            "Precipitation (mm)": (precipitation_indicators, "Blues"),
+            "Temperature (°C)": (temperature_indicators, "Reds"),
+            "Drought": (precipitation_indicators, "Blues"),
+            "Heavy Rain": (precipitation_indicators, "Blues"),
+            "Heat Wave": (temperature_indicators, "Blues"),
+        }
 
     weather_indicators = {
         "Precipitation (mm)": "precipitation",
