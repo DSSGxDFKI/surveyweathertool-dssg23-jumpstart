@@ -33,7 +33,7 @@ EXPOSE 8501
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 ### In future might have dashboard on public git repo.
 ### Once streamlit has MVP going expose to user in popup website
-ENTRYPOINT ["streamlit", "run", "surveyweathertool/Home.py", "--server.port=8501", "--server.address=0.0.0.0"]
+ENTRYPOINT ["streamlit", "run", "surveyweathertool/Home.py", "--server.port=8501", "--server.address=0.0.0.0", "--", "--datalocation=gdrive", "--computation=low_resource"]
 
 # By running the Docker container, the pipeline gets triggered
 # ENTRYPOINT [ "bash" ]
