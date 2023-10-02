@@ -40,9 +40,6 @@ from src.dashboard.utils import parse_command_arguments
 # Parse the arguments passend when running the streamlit run command
 datalocation, computation = parse_command_arguments()
 
-print(f"datalocation: {datalocation} with type {type(datalocation)}")
-print(f"datalocation: {computation} with type {type(computation)}")
-
 # Page Configuration
 st.set_page_config(page_title="LSMS-ISA Dashboard", page_icon="📈")
 
