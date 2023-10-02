@@ -17,7 +17,17 @@ from src.dashboard.utils import (
 )
 from src.weather_x_survey.weather_survey import merge_weather_household
 
-from src.weather.constants import PRECIPITATION_FILE, TEMPERATURE_FILE, JOINED_WEATHER_DATA_FILE
+from src.weather.constants import (
+    PRECIPITATION_FILE,
+    TEMPERATURE_FILE,
+    JOINED_WEATHER_DATA_FILE,
+    TEMPERATURE_INDICATORS,
+    PRECIPITATION_INDICATORS,
+)
+from src.dashboard.utils import parse_command_arguments
+
+# Parse the arguments passend when running the streamlit run command
+datalocation, computation = parse_command_arguments()
 
 # Page Configuration
 st.set_page_config(page_title="Weather Data Enhancement", page_icon="📊")
@@ -75,37 +85,52 @@ if uploaded_file is not None:
     # Read Weather data (Temp and Precip with climate columns) and preprocess it
     st.toast("Weather data is being read and preprocessed", icon="⌛")
     with st.spinner("Weather data is being read and preprocessed..."):
-        # precipitation_indicators_data = load_data_from_google_drive(
-        #     file_to_load=PRECIPITATION_FILE
-        # )
-        # precipitation_indicators = pd.read_parquet(precipitation_indicators_data)
-        # precipitation_indicators = preprocess_weather_data(precipitation_indicators)
-        # temperature_indicators_data = load_data_from_google_drive(
-        #     file_to_load=TEMPERATURE_FILE
-        # )
-        # temperature_indicators = pd.read_parquet(temperature_indicators_data)
-        # temperature_indicators = preprocess_weather_data(temperature_indicators)
-
         # Defining all indicators to aggregate and return attached to uploaded data
         weather_data_indicators_dict = {
             "precipitation": ["precipitation", "heavy_rain_index", "spi_index"],
             "temperature": ["temperature", "heatwave_index"],
         }
-        weather_data = load_data_from_google_drive(
-            file_to_load=JOINED_WEATHER_DATA_FILE
-        )
-        weather_data_df = pd.read_parquet(weather_data)
-        weather_data_df = preprocess_weather_data(weather_data_df)
         merged_data = input.copy()
+
+        if datalocation == "gdrive" and computation == "low_resource":
+            weather_data = load_data_from_google_drive(
+                file_to_load=JOINED_WEATHER_DATA_FILE
+            )
+            weather_data_df = pd.read_parquet(weather_data)
+            weather_data_df = preprocess_weather_data(weather_data_df)
+
+        elif datalocation == "gdrive" and computation == "high_resource":
+            precipitation_indicators_data = load_data_from_google_drive(
+                file_to_load=PRECIPITATION_FILE
+            )
+            precipitation_indicators = pd.read_parquet(precipitation_indicators_data)
+            precipitation_indicators = preprocess_weather_data(precipitation_indicators)
+            temperature_indicators_data = load_data_from_google_drive(
+                file_to_load=TEMPERATURE_FILE
+            )
+            temperature_indicators = pd.read_parquet(temperature_indicators_data)
+            temperature_indicators = preprocess_weather_data(temperature_indicators)
+
+        elif datalocation == "local" and computation == "high_resource":
+            precipitation_indicators = pd.read_parquet(PRECIPITATION_INDICATORS)
+            precipitation_indicators = preprocess_weather_data(precipitation_indicators)
+            temperature_indicators = pd.read_parquet(TEMPERATURE_INDICATORS)
+            temperature_indicators = preprocess_weather_data(temperature_indicators)
 
     st.toast("Weather features are being created", icon="⌛")
     # Iterate over each column
     with st.spinner("Weather features are being created..."):
         for key, value_cols in weather_data_indicators_dict.items():
-            if key == "precipitation":
-                weather_df = weather_data_df
-            elif key == "temperature":
-                weather_df = weather_data_df
+            if computation == "high_resource":
+                if key == "precipitation":
+                    weather_df = precipitation_indicators
+                elif key == "temperature":
+                    weather_df = temperature_indicators
+            else:
+                if key == "precipitation":
+                    weather_df = weather_data_df
+                elif key == "temperature":
+                    weather_df = weather_data_df
             for indicator in value_cols:
                 # Retrieve weather information for the input using interpolated weather data
                 merged_weather_data = merge_weather_household(
