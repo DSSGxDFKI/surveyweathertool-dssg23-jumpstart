@@ -7,6 +7,8 @@ import streamlit as st
 from PIL import Image
 from pathlib import Path
 from typing import List, Optional
+import argparse
+
 
 from src.weather.weather_pipeline import convert_point_crs
 
@@ -226,3 +228,15 @@ def dataframe_reader(
     if reset_index:
         data = data.reset_index()
     return data
+
+
+def parse_command_arguments() -> tuple:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--datalocation", type=str)
+    parser.add_argument("-c", "--computation", type=str)
+
+    args = parser.parse_args()
+    datalocation = args.datalocation
+    computation = args.computation
+
+    return (datalocation, computation)
